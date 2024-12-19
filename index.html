@@ -6,7 +6,7 @@
     <title>Dino-Finder</title>
     <style>
         body {
-            background-color: #1e1e1e;
+            background: linear-gradient(135deg, #1e1e1e, #2b2b2b);
             color: #00ff00;
             font-family: 'Courier New', Courier, monospace;
             margin: 0;
@@ -21,9 +21,32 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes rippleEffect {
-            from { transform: scale(0); opacity: 1; }
-            to { transform: scale(4); opacity: 0; }
+        @keyframes bounceEffect {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes letterAnimation {
+            0% { opacity: 0; transform: scale(0.5); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes hoverGlow {
+            0% { box-shadow: 0 0 10px #00ff00; }
+            50% { box-shadow: 0 0 30px #00ff00, 0 0 50px #ff0000; }
+            100% { box-shadow: 0 0 10px #00ff00; }
+        }
+
+        @keyframes musicBounce {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
         }
 
         #modal {
@@ -45,19 +68,21 @@
             background-color: #222;
             padding: 40px;
             border: 2px solid #00ff00;
-            border-radius: 10px;
+            border-radius: 20px;
             box-shadow: 0 0 30px #00ff00;
+            animation: slideIn 1s ease-in-out;
         }
 
         #modal select, #modal input, #modal button {
             margin: 10px 0;
-            padding: 12px;
+            padding: 15px;
             font-size: 16px;
             background-color: #333;
             color: #00ff00;
             border: 2px solid #00ff00;
-            border-radius: 5px;
+            border-radius: 10px;
             outline: none;
+            transition: all 0.3s ease;
         }
 
         #modal button {
@@ -65,6 +90,7 @@
             color: #222;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            animation: bounceEffect 1s infinite alternate;
         }
 
         #modal button:hover { background-color: #fff; color: #00ff00; }
@@ -74,6 +100,8 @@
             padding: 40px;
             text-align: center;
             animation: fadeIn 1s ease-in-out;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.6);
         }
 
         h1 {
@@ -81,6 +109,7 @@
             margin-bottom: 30px;
             color: #00ff00;
             text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
+            animation: slideIn 1s ease-in-out;
         }
 
         input {
@@ -89,11 +118,12 @@
             background-color: #333;
             color: #00ff00;
             border: 2px solid #00ff00;
-            border-radius: 5px;
+            border-radius: 10px;
             font-size: 18px;
             margin-bottom: 20px;
             outline: none;
             transition: transform 0.3s ease;
+            animation: letterAnimation 0.5s ease-in-out;
         }
 
         input:focus {
@@ -110,12 +140,14 @@
             max-height: 400px;
             overflow-y: auto;
             box-shadow: 0 0 20px rgba(0, 255, 0, 0.7);
+            animation: fadeIn 1s ease-in-out;
         }
 
         #output h3 a {
             color: #00ff00;
             text-decoration: none;
             transition: color 0.3s;
+            animation: slideIn 1s ease-in-out;
         }
 
         #output h3 a:hover { color: #fff; }
@@ -128,8 +160,10 @@
             background-color: #333;
             color: #00ff00;
             border: 2px solid #00ff00;
-            border-radius: 5px;
+            border-radius: 10px;
             cursor: pointer;
+            transition: all 0.3s ease;
+            animation: hoverGlow 1.5s infinite alternate;
         }
 
         #f12Message, #rightClickMessage {
@@ -148,7 +182,7 @@
         }
 
         .light-theme {
-            background-color: #f0f0f0;
+            background-color: #fff;
             color: #000;
         }
 
@@ -162,6 +196,15 @@
 
         .light-theme h1 {
             color: #000;
+        }
+
+        /* Nhún nhảy khung */
+        .frameBounce {
+            animation: musicBounce 1s ease-in-out infinite;
+            border: 5px solid #00ff00;
+            padding: 20px;
+            margin: 10px;
+            border-radius: 15px;
         }
 
     </style>
@@ -180,7 +223,7 @@
         </div>
     </div>
 
-    <div id="mainContent">
+    <div id="mainContent" class="frameBounce">
         <h1 id="mainHeading"></h1>
         <input type="text" id="search" placeholder="Enter text to search...">
         <div id="output"></div>
@@ -234,9 +277,18 @@
 
         function typeEffect(element, text, speed) {
             let i = 0;
+            const specialChars = ['%', '$', '#', '@'];
             const interval = setInterval(() => {
                 if (i < text.length) {
-                    element.textContent += text.charAt(i);
+                    const char = document.createElement("span");
+                    if (Math.random() < 0.1) { // 10% chance to add a special character
+                        char.textContent = specialChars[Math.floor(Math.random() * specialChars.length)];
+                        char.style.animation = "specialCharEffect 1s ease forwards";
+                    } else {
+                        char.textContent = text.charAt(i);
+                        char.style.animation = "letterAnimation 0.3s ease forwards";
+                    }
+                    element.appendChild(char);
                     i++;
                 } else {
                     clearInterval(interval);
