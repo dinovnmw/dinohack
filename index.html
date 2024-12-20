@@ -55,6 +55,27 @@
             to { transform: translateX(0); opacity: 1; }
         }
 
+        /* New Animations */
+        @keyframes pulseEffect {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shakeEffect {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+
+        @keyframes glowingTextEffect {
+            0% { color: #00ff00; text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00; }
+            50% { color: #ff0000; text-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000; }
+            100% { color: #00ff00; text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00; }
+        }
+
         /* Modal */
         #modal {
             position: fixed;
@@ -105,6 +126,7 @@
             background-color: #fff;
             color: #00ff00;
             box-shadow: 0 0 15px rgba(0, 255, 0, 0.8);
+            animation: pulseEffect 1.5s infinite alternate;
         }
 
         #mainContent {
@@ -119,7 +141,7 @@
             margin-bottom: 30px;
             color: #00ff00;
             text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
-            animation: slideIn 1s ease-in-out;
+            animation: slideIn 1s ease-in-out, glowingTextEffect 3s infinite alternate;
         }
 
         input {
@@ -359,6 +381,7 @@
                 typeEffect(mainHeading, translations[languageSelector.value].mainHeading, 100);
             } else {
                 errorMessage.style.display = "block";
+                errorMessage.style.animation = "shakeEffect 0.5s ease-in-out";
             }
         });
 
@@ -374,37 +397,36 @@
                             output += `<h3><a href="https://en.wikipedia.org/?curid=${result.pageid}" target="_blank">${result.title}</a></h3><p>${result.snippet}</p>`;
                         });
                         document.getElementById('output').innerHTML = output;
+                    })
+                    .catch(error => {
+                        console.error(error);
                     });
             } else {
                 document.getElementById('output').innerHTML = '';
             }
         });
 
-        window.addEventListener('keydown', function (e) {
-            if (e.key === 'F12') {
+        themeToggle.addEventListener("click", function () {
+            document.body.classList.toggle("light-theme");
+        });
+
+        document.addEventListener("keydown", function (e) {
+            if (e.key === "F12") {
                 e.preventDefault();
-                const f12Message = document.getElementById('f12Message');
-                f12Message.style.display = 'block';
-                setTimeout(() => {
-                    f12Message.style.display = 'none';
+                document.getElementById("f12Message").style.display = "block";
+                setTimeout(function () {
+                    document.getElementById("f12Message").style.display = "none";
                 }, 3000);
             }
         });
 
-        window.addEventListener('contextmenu', function (e) {
+        document.addEventListener("contextmenu", function (e) {
             e.preventDefault();
-            const rightClickMessage = document.getElementById('rightClickMessage');
-            rightClickMessage.style.display = 'block';
-            setTimeout(() => {
-                rightClickMessage.style.display = 'none';
+            document.getElementById("rightClickMessage").style.display = "block";
+            setTimeout(function () {
+                document.getElementById("rightClickMessage").style.display = "none";
             }, 3000);
         });
-
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('light-theme');
-        });
-
-        updateLanguage("en");
     </script>
 </body>
 </html>
