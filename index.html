@@ -6,7 +6,7 @@
     <title>Dino-Finder</title>
     <style>
         body {
-            background: linear-gradient(135deg, #1e1e1e, #2b2b2b);
+            background-color: #1e1e1e;
             color: #00ff00;
             font-family: 'Courier New', Courier, monospace;
             margin: 0;
@@ -16,9 +16,32 @@
             transition: background-color 0.5s ease, color 0.5s ease;
         }
 
+        /* Keyframe for text animations */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes rippleEffect {
+            from { transform: scale(0); opacity: 1; }
+            to { transform: scale(4); opacity: 0; }
+        }
+
+        @keyframes letterAnimation {
+            0% { opacity: 0; transform: scale(0.5); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes specialCharEffect {
+            0% { transform: rotate(0deg); opacity: 0; }
+            50% { transform: rotate(45deg); opacity: 1; }
+            100% { transform: rotate(0deg); opacity: 0; }
+        }
+
+        @keyframes hoverGlow {
+            0% { box-shadow: 0 0 10px #00ff00; }
+            50% { box-shadow: 0 0 30px #00ff00, 0 0 50px #ff0000; }
+            100% { box-shadow: 0 0 10px #00ff00; }
         }
 
         @keyframes bounceEffect {
@@ -32,23 +55,7 @@
             to { transform: translateX(0); opacity: 1; }
         }
 
-        @keyframes letterAnimation {
-            0% { opacity: 0; transform: scale(0.5); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-
-        @keyframes hoverGlow {
-            0% { box-shadow: 0 0 10px #00ff00; }
-            50% { box-shadow: 0 0 30px #00ff00, 0 0 50px #ff0000; }
-            100% { box-shadow: 0 0 10px #00ff00; }
-        }
-
-        @keyframes musicBounce {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
+        /* Modal */
         #modal {
             position: fixed;
             top: 0;
@@ -68,21 +75,22 @@
             background-color: #222;
             padding: 40px;
             border: 2px solid #00ff00;
-            border-radius: 20px;
+            border-radius: 10px;
             box-shadow: 0 0 30px #00ff00;
             animation: slideIn 1s ease-in-out;
         }
 
         #modal select, #modal input, #modal button {
             margin: 10px 0;
-            padding: 15px;
+            padding: 12px;
             font-size: 16px;
             background-color: #333;
             color: #00ff00;
             border: 2px solid #00ff00;
-            border-radius: 10px;
+            border-radius: 5px;
             outline: none;
             transition: all 0.3s ease;
+            animation: letterAnimation 0.3s ease-in-out;
         }
 
         #modal button {
@@ -93,15 +101,17 @@
             animation: bounceEffect 1s infinite alternate;
         }
 
-        #modal button:hover { background-color: #fff; color: #00ff00; }
+        #modal button:hover {
+            background-color: #fff;
+            color: #00ff00;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.8);
+        }
 
         #mainContent {
             display: none;
             padding: 40px;
             text-align: center;
             animation: fadeIn 1s ease-in-out;
-            border-radius: 10px;
-            box-shadow: 0 0 30px rgba(0, 255, 0, 0.6);
         }
 
         h1 {
@@ -118,11 +128,11 @@
             background-color: #333;
             color: #00ff00;
             border: 2px solid #00ff00;
-            border-radius: 10px;
+            border-radius: 5px;
             font-size: 18px;
             margin-bottom: 20px;
             outline: none;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, border-color 0.3s ease;
             animation: letterAnimation 0.5s ease-in-out;
         }
 
@@ -150,7 +160,11 @@
             animation: slideIn 1s ease-in-out;
         }
 
-        #output h3 a:hover { color: #fff; }
+        #output h3 a:hover {
+            color: #fff;
+            text-decoration: underline;
+            transition: color 0.3s;
+        }
 
         #themeToggle {
             position: fixed;
@@ -160,7 +174,7 @@
             background-color: #333;
             color: #00ff00;
             border: 2px solid #00ff00;
-            border-radius: 10px;
+            border-radius: 5px;
             cursor: pointer;
             transition: all 0.3s ease;
             animation: hoverGlow 1.5s infinite alternate;
@@ -181,30 +195,65 @@
             animation: fadeIn 1s ease-in-out;
         }
 
+        /* Updated Light Mode Styles */
         .light-theme {
-            background-color: #fff;
-            color: #000;
+            background-color: #fafafa; /* Lighter background */
+            color: #333; /* Dark text for better contrast */
+            transition: background-color 0.5s ease, color 0.5s ease;
         }
 
-        .light-theme #modalContent,
-        .light-theme input,
+        .light-theme #modalContent {
+            background-color: #fff; /* White modal content */
+            color: #333; /* Dark text for readability */
+            border-color: #333; /* Darker border for contrast */
+        }
+
+        .light-theme #modal select,
+        .light-theme #modal input,
+        .light-theme #modal button {
+            background-color: #fff; /* White input and button backgrounds */
+            color: #333; /* Dark text */
+            border-color: #ddd; /* Light grey border */
+        }
+
         .light-theme #themeToggle {
-            background-color: #fff;
-            color: #000;
-            border-color: #333;
+            background-color: #fff; /* White button background */
+            color: #333; /* Dark text */
+            border-color: #ddd; /* Light grey border */
         }
 
         .light-theme h1 {
-            color: #000;
+            color: #222; /* Dark heading */
+            text-shadow: 0 0 5px #666, 0 0 10px #666; /* Softer text shadow */
         }
 
-        /* Nhún nhảy khung */
-        .frameBounce {
-            animation: musicBounce 1s ease-in-out infinite;
-            border: 5px solid #00ff00;
-            padding: 20px;
-            margin: 10px;
-            border-radius: 15px;
+        .light-theme input {
+            background-color: #f9f9f9; /* Light input background */
+            border-color: #ccc; /* Light grey border */
+        }
+
+        .light-theme input:focus {
+            border-color: #1e90ff; /* Focused input border with a blue color */
+        }
+
+        .light-theme #output {
+            background-color: #f4f4f4; /* Lighter background for the output */
+            border-color: #ddd; /* Light grey border */
+            color: #333; /* Dark text */
+        }
+
+        .light-theme #output h3 a {
+            color: #1e90ff; /* Blue links for better contrast */
+        }
+
+        .light-theme #output h3 a:hover {
+            color: #333; /* Darken links when hovered */
+        }
+
+        .light-theme #f12Message,
+        .light-theme #rightClickMessage {
+            background-color: rgba(255, 0, 0, 0.8); /* Red message background with a slight transparency */
+            color: #fff;
         }
 
     </style>
@@ -223,7 +272,7 @@
         </div>
     </div>
 
-    <div id="mainContent" class="frameBounce">
+    <div id="mainContent">
         <h1 id="mainHeading"></h1>
         <input type="text" id="search" placeholder="Enter text to search...">
         <div id="output"></div>
